@@ -1,4 +1,12 @@
 <template>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <h5></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <h5></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     <div class="container">
         <div class="row">
             <div class="col-md-8 ml-auto mr-auto offset-md-2">
@@ -12,19 +20,21 @@
 
                         <form>
                             <div class="form-row">
-                                <div class="form-group col-md-12 mx-2">
+                                <div class="form-group col-md-12 mx-2 mb-3">
                                     <label for="user">Usuário</label>
-                                    <input type="text" placeholder="E-mail do cliente" ref="usuario"
-                                        class="form-control mb-3" name="usuario" />
+                                    <input type="text" placeholder="E-mail do cliente" ref="email" class="form-control"
+                                        name="email" />
+                                    <span class="text-danger"></span>
                                 </div>
                                 <div class="form-group col-md-12 mx-2">
                                     <label for="user">Senha</label>
                                     <input type="password" placeholder="Senha do cliente" ref="senha" class="form-control"
                                         name="senha" />
+                                    <span class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="form-group col-md-12">
-                                <button class="btn btn-success float-end mt-2">Fazer login</button>
+                                <button class="btn btn-success float-end mt-2">Cadastrar</button>
                             </div>
                         </form>
 
