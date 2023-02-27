@@ -41,6 +41,60 @@
         $res_output['clientes'] = $clientes;
     }
 
+    if ($acao == 'registrar') {
+
+        function checkStr($data) {
+            $data = trim($data);
+            $data = stripslashes($data);
+            $data = htmlspecialchars($data);
+            return $data;
+        }
+
+        $nome = checkStr($_POST['nome']);
+        $email = checkStr($_POST['email']);
+        $senha = checkStr($_POST['senha']);
+
+        if ($nome == '') {
+
+            $res_output['nome'] = true;
+            $res_output['mensagem'] = 'Informe seu nome!';
+
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)){
+
+            $res_output['email'] = true;
+            $res_output['mensagem'] = 'Informe seu e-mail!';
+
+        } else if ($senha == '') {
+
+            $res_output['senha'] = true;
+            $res_output['mensagem'] = 'Informe sua senha!';
+
+        } else {
+            $sql = "INSERT INTO clientes (nome, email, senha) values ('$nome', '$email', '$senha')"; 
+            $query = $db_conn->query($sql);
+
+            if ($query->num_rows > 0) {
+
+                $res_output['email'] = true;
+                $res_output['mensagem'] = 'Cliente já cadastrado';
+
+            } else {
+
+                $sql = "INSERT INTO clientes (nome, email, senha) values ('$nome', '$email', '$senha')"; 
+                $query = $db_conn->query($sql);
+
+                if ($query) {
+                    $query['mensagem'] = 'Cliente adicionado com sucesso :)';
+                } else {
+                    $res_output['error'] = true;
+                    $res_output['mensagem'] = 'Não foi possível adicionar o cliente :(';
+                }
+
+            }
+        }
+
+    }
+
     $db_conn->close();
     //simple pass a json format data in php 
     header("Content-type: application/json");
