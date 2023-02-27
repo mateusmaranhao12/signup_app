@@ -1,7 +1,9 @@
 <?php
 
+    //incluindo banco de dados
     include "db.php";
 
+    //requisições para conectar com o banco de dados
     if (isset($_SERVER['HTTP_ORIGIN'])) {
         // Decida se a origem em $_SERVER['HTTP_ORIGIN'] é uma
         // você deseja permitir e, em caso afirmativo:
@@ -70,7 +72,7 @@
             $res_output['mensagem'] = 'Informe sua senha!';
 
         } else {
-            $sql = "INSERT INTO clientes (nome, email, senha) values ('$nome', '$email', '$senha')"; 
+            $sql= "SELECT * from clientes where email='$email'";
             $query = $db_conn->query($sql);
 
             if ($query->num_rows > 0) {
@@ -84,7 +86,7 @@
                 $query = $db_conn->query($sql);
 
                 if ($query) {
-                    $query['mensagem'] = 'Cliente adicionado com sucesso :)';
+                    $res_output['mensagem'] = 'Cliente adicionado com sucesso :)';
                 } else {
                     $res_output['error'] = true;
                     $res_output['mensagem'] = 'Não foi possível adicionar o cliente :(';
