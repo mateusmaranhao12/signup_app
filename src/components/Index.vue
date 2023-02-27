@@ -1,9 +1,9 @@
 <template>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <div v-if="mensagem_sucesso" class="alert alert-success alert-dismissible fade show" role="alert">
         <h5></h5>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <div v-if="mensagem_erro" class="alert alert-danger alert-dismissible fade show" role="alert">
         <h5></h5>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
@@ -18,25 +18,32 @@
                     </div>
                     <div class="card-body">
 
-                        <form>
+                        <div>
                             <div class="form-row">
                                 <div class="form-group col-md-12 mx-2 mb-3">
-                                    <label for="user">Usuário</label>
+                                    <label for="user">Nome</label>
+                                    <input type="text" placeholder="Nome do cliente" ref="nome" class="form-control"
+                                        name="nome" v-model="informacoes_registro.nome" />
+                                    <span v-if="erro_nome" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-12 mx-2 mb-3">
+                                    <label for="user">E-mail</label>
                                     <input type="text" placeholder="E-mail do cliente" ref="email" class="form-control"
-                                        name="email" />
-                                    <span class="text-danger"></span>
+                                        name="email" v-model="informacoes_registro.email" />
+                                    <span v-if="erro_email" class="text-danger"></span>
                                 </div>
                                 <div class="form-group col-md-12 mx-2">
                                     <label for="user">Senha</label>
                                     <input type="password" placeholder="Senha do cliente" ref="senha" class="form-control"
-                                        name="senha" />
-                                    <span class="text-danger"></span>
+                                        name="senha" v-model="informacoes_registro.senha" />
+                                    <span v-if="erro_senha" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="form-group col-md-12">
-                                <button class="btn btn-success float-end mt-2">Cadastrar</button>
+                                <button @click="registrarCliente()"
+                                    class="btn btn-success float-end mt-2">Cadastrar</button>
                             </div>
-                        </form>
+                        </div>
 
                     </div>
                 </div>
@@ -52,10 +59,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Mateus</td>
-                            <td>@feradourada@gmail.com</td>
+                        <tr v-for="cliente in clientes" :key="cliente.id">
+                            <td>{{ cliente.id }}</td>
+                            <td>{{ cliente.nome }}</td>
+                            <td>{{ cliente.email }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -65,7 +72,56 @@
 </template>
 
 <script>
+
+//import axios from 'axios'
+
+import axios from 'axios'
 export default {
-    name: 'Index'
+    name: 'Index',
+
+    el: '#register',
+
+    data() {
+        return {
+            mensagem_sucesso: '',
+            mensagem_erro: '',
+            erro_nome: '',
+            erro_email: '',
+            erro_senha: '',
+            clientes: [],
+            informacoes_registro: { nome: '', email: '', senha: '' }
+        }
+    },
+
+    mounted() {
+        this.getClientes()
+    },
+
+    methods: {
+
+        getClientes() {
+            axios.get('http://localhost/Projetos/signup_app/src/api/api.php')
+                .then((res) => {
+                    if (res.data.error) {
+                        this.mensagem_erro = res.data.mensagem
+                    }
+                    else {
+                        this.clientes = res.data.clientes
+                    }
+                });
+        },
+
+        registrarCliente() {
+            console.log(this.informacoes_registro)
+
+            this.limparFormulario()
+        },
+
+        limparFormulario() {
+            this.informacoes_registro.nome = '',
+                this.informacoes_registro.email = '',
+                this.informacoes_registro.senha = ''
+        }
+    }
 }
 </script>
